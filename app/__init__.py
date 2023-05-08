@@ -67,4 +67,7 @@ api = Api(app, prefix = prefix)
 ### --- List of all Resources --- ###
 # included application layer
 # controller moved to application/controller
-from app.main.application import * # import all controllers
+from app.main.application.api import * # import all controllers
+
+### --- List of all Added Resources to API --- ###
+api.add_resource(DataSourceAPI, "/data_source")

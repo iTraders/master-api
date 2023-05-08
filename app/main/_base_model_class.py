@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 
 # define base model schema for all basic models
+import decimal
+import datetime as dt
 
 class ModelClass(object):
     """Base Model Schema

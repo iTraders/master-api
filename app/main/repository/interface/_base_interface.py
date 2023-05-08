@@ -15,7 +15,6 @@ These HTTP methods can be mapped to specific endpoints in your API to represent 
 ? `get_all()` : Typically, this function returns everything.
 """
 
-from app.main import db
 from app.main.models import * # noqa: F401, F403
 
 class BaseInterface(object):
