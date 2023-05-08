@@ -2,14 +2,6 @@
 
 import os
 
-# setting the environment
-from dotenv import load_dotenv # Python 3.6+
-
-load_dotenv(verbose = True)
-
-basedir    = os.path.abspath(os.path.dirname(__file__)) # base directory
-local_base = os.getenv("DATABASE_URL", "my-database-url-string")
-
 class Config:
     """Base Configuration Class - Inherited by Others"""
 
@@ -17,15 +9,31 @@ class Config:
     TESTING    = False
     SECRET_KEY = os.getenv("SECRET_KEY", "my_secret_key")
 
+    # database centric variables can be initialized like
+    DATABASE_USERNAME = os.getenv("_iTraders_MASTER_API_DB_USERNAME", "user")
+    DATABASE_PASSWORD = os.getenv("_iTraders_MASTER_API_DB_PASSWORD", "pass")
+    DATABASE_HOSTNAME = os.getenv("_iTraders_MASTER_API_DB_HOSTNAME", "localhost")
+    DATABASE_PORTNUMBER = os.getenv("_iTraders_MASTER_API_DB_PORTNUMBER", 3306)
+
+    # sqlalchemy settings
+    PRESERVE_CONTEXT_ON_EXCEPTION  = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    @property
+    def SQLALCHEMY_DATABASE_URI(self):
+        __SA_DB_CON__ = "mysql+pymysql:/"
+        return f"{__SA_DB_CON__}/{self.DATABASE_USERNAME}:{self.DATABASE_PASSWORD}" + \
+            f"@{self.DATABASE_HOSTNAME}:{self.DATABASE_PORTNUMBER}/{self.schema_name}"
+
 
 class DevelopmentConfig(Config):
     """Development Configuration: invoke this using config_name = dev"""
 
     DEBUG = True # This is a development server.
 
-    # set database
-    SQLALCHEMY_DATABASE_URI = f"{local_base}/{os.getenv('dev_db', 'dev-database')}"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    def __init__(self) -> None:
+        super().__init__()
+        self.schema_name = "test"
 
 
 class TestingConfig(Config):
@@ -34,11 +42,9 @@ class TestingConfig(Config):
     DEBUG   = True
     TESTING = True
 
-    # set database
-    SQLALCHEMY_DATABASE_URI = f"{local_base}/{os.getenv('test_db', 'test-database')}"
-
-    PRESERVE_CONTEXT_ON_EXCEPTION  = False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    def __init__(self) -> None:
+        super().__init__()
+        self.schema_name = "test-database"
 
 
 class ProductionConfig(Config):
