@@ -19,11 +19,11 @@ class Config:
     PRESERVE_CONTEXT_ON_EXCEPTION  = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    @property
-    def SQLALCHEMY_DATABASE_URI(self):
-        __SA_DB_CON__ = "mysql+pymysql:/"
-        return f"{__SA_DB_CON__}/{self.DATABASE_USERNAME}:{self.DATABASE_PASSWORD}" + \
-            f"@{self.DATABASE_HOSTNAME}:{self.DATABASE_PORTNUMBER}/{self.schema_name}"
+    # @property
+    # def SQLALCHEMY_DATABASE_URI(self):
+    #     __SA_DB_CON__ = "mysql+pymysql:/"
+    #     return f"{__SA_DB_CON__}/{self.DATABASE_USERNAME}:{self.DATABASE_PASSWORD}" + \
+    #         f"@{self.DATABASE_HOSTNAME}:{self.DATABASE_PORTNUMBER}/{self.schema_name}"
 
 
 class DevelopmentConfig(Config):
@@ -34,6 +34,8 @@ class DevelopmentConfig(Config):
     def __init__(self) -> None:
         super().__init__()
         self.schema_name = "test"
+
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:admin179@localhost:33060/test"
 
 
 class TestingConfig(Config):
